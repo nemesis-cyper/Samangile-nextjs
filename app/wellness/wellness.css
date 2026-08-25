@@ -1,0 +1,142 @@
+/* ==========================================================================
+   WELLNESS MARKETPLACE — ADDITIONS
+   Layered on top of globals.css + demo-extra.css. Reuses the same design
+   tokens (--charcoal, --gold, --ivory, etc.) so wellness.html reads as the
+   same site as index.html, not a bolted-on page.
+   ========================================================================== */
+
+/* ---------- View routing (shop / register / login tabs) ---------- */
+.wl-view { display: none; }
+.wl-view.active { display: block; }
+
+/* ---------- Account links in header ---------- */
+.nav-account { display: flex; align-items: center; gap: 14px; }
+.nav-account .cart-pill {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.78rem; color: var(--ivory);
+  background: rgba(244,238,225,0.08); border: 1px solid rgba(201,162,75,0.3);
+  padding: 7px 12px; border-radius: 999px;
+}
+.nav-account .login-link {
+  color: var(--ivory); font-size: 0.86rem;
+  border-bottom: 1px solid transparent;
+}
+.nav-account .login-link:hover { border-color: var(--gold); color: var(--gold-bright); }
+
+/* ---------- Shop hero ---------- */
+.shop-hero { padding: 64px 0 8px; }
+.shop-hero p.lede { max-width: 60ch; }
+
+/* ---------- Filter row ---------- */
+.filter-row {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  padding: 24px 0 8px;
+}
+.filter-btn {
+  background: #fff; border: 1px solid var(--stone-line); border-radius: 999px;
+  padding: 9px 18px; font-size: 0.82rem; font-weight: 500; color: var(--charcoal);
+  cursor: pointer; font-family: var(--font-body);
+}
+.filter-btn.active, .filter-btn:hover {
+  background: var(--charcoal); color: var(--ivory); border-color: var(--charcoal);
+}
+
+/* ---------- Product grid ---------- */
+.shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; padding: 32px 0 90px; }
+@media (max-width: 900px) { .shop-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .shop-grid { grid-template-columns: 1fr; } }
+
+.product-card {
+  background: #fff; border-radius: var(--radius-md); overflow: hidden;
+  box-shadow: var(--shadow-card); border: 1px solid var(--stone-line);
+  display: flex; flex-direction: column; transition: transform 0.2s ease;
+}
+.product-card:hover { transform: translateY(-3px); }
+.product-media {
+  aspect-ratio: 4/3; position: relative; display: flex; align-items: center; justify-content: center;
+}
+.product-media .badge {
+  position: absolute; top: 12px; left: 12px;
+  background: rgba(23,20,15,0.78); color: var(--gold-bright);
+  font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 999px;
+}
+.product-body { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.product-partner {
+  font-size: 0.7rem; color: var(--green-deep); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;
+}
+.product-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; }
+.product-desc { font-size: 0.86rem; color: var(--charcoal); opacity: 0.72; line-height: 1.5; flex: 1; }
+.product-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+.product-price { font-family: var(--font-display); font-size: 1.05rem; color: var(--gold-deep); }
+.add-btn {
+  padding: 9px 16px; font-size: 0.78rem; font-weight: 600; border-radius: 999px;
+  background: var(--charcoal); color: var(--ivory); border: none; cursor: pointer; font-family: var(--font-body);
+}
+.add-btn:hover { background: var(--gold-deep); }
+
+/* ---------- Auth (register / login) ---------- */
+.auth-shell {
+  min-height: 640px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--stone-line);
+}
+@media (max-width: 800px) { .auth-shell { grid-template-columns: 1fr; min-height: auto; } .auth-side { display: none; } }
+
+.auth-side {
+  background: var(--charcoal); color: var(--ivory);
+  padding: 60px; display: flex; flex-direction: column; justify-content: space-between;
+  position: relative; overflow: hidden;
+}
+.auth-side .pattern {
+  position: absolute; inset: 0; opacity: 0.14;
+  background-image:
+    repeating-linear-gradient(60deg, var(--gold) 0 2px, transparent 2px 22px),
+    repeating-linear-gradient(-60deg, var(--gold-deep) 0 2px, transparent 2px 22px);
+}
+.auth-side .brand-mini { display: flex; align-items: center; gap: 10px; position: relative; z-index: 1; }
+.auth-side .brand-mini img { height: 26px; width: auto; }
+.auth-side .brand-mini span {
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-bright);
+}
+.auth-side .quote {
+  font-family: var(--font-display); font-style: italic; font-size: 1.35rem; line-height: 1.5;
+  max-width: 34ch; position: relative; z-index: 1;
+}
+.auth-side .attrib {
+  font-size: 0.72rem; color: rgba(244,238,225,0.6); margin-top: 14px; position: relative; z-index: 1;
+}
+
+.auth-form-col { display: flex; align-items: center; justify-content: center; padding: 60px 24px; }
+.auth-card { width: 100%; max-width: 400px; }
+.auth-card h2 { margin-bottom: 6px; }
+.auth-card p.sub { color: var(--green-deep); font-size: 0.88rem; margin: 0 0 28px; opacity: 0.85; }
+
+.field { margin-bottom: 16px; }
+.field label { margin-bottom: 6px; }
+.field input { margin-bottom: 0; }
+
+.checks { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 24px; }
+.chip {
+  font-size: 0.78rem; padding: 7px 13px; border: 1px solid var(--stone-line); border-radius: 999px;
+  background: var(--ivory-deep); display: flex; align-items: center; gap: 6px;
+}
+.chip input { margin: 0; width: auto; }
+
+.auth-foot { margin-top: 22px; font-size: 0.84rem; color: var(--green-deep); text-align: center; opacity: 0.85; }
+.auth-foot button {
+  background: none; border: none; color: var(--gold-deep); font-weight: 600;
+  text-decoration: underline; padding: 0; font-size: 0.84rem; cursor: pointer; font-family: var(--font-body);
+}
+
+.success-box {
+  background: rgba(91,114,71,0.1); border: 1px solid var(--green); border-radius: var(--radius-sm);
+  padding: 14px 16px; font-size: 0.85rem; color: var(--green-deep); display: none; margin-bottom: 18px;
+}
+.success-box.show { display: block; }
+
+/* ---------- Trust / partner strip reuse ---------- */
+.partner-row {
+  display: flex; flex-wrap: wrap; gap: 10px 30px; justify-content: center;
+  padding: 20px 0; font-family: var(--font-display); font-size: 1rem; color: var(--green-deep); opacity: 0.85;
+}
