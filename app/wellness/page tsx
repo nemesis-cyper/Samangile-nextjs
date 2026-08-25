@@ -1,0 +1,313 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import "./wellness.css";
+
+// ---------- Types ----------
+type ViewName = "shop" | "register" | "login";
+
+type Product = {
+  partner: string;
+  name: string;
+  cat: string;
+  price: string;
+  desc: string;
+  badge: string;
+  grad: [string, string];
+};
+
+// ---------- Static data (ported from wellness.html) ----------
+const PRODUCTS: Product[] = [
+  { partner: "Rooibos & Rest", name: "Evening Rooibos Blend", cat: "Sleep", price: "R145", desc: "Caffeine-free wind-down tea, hand-blended in-house.", badge: "Bestseller", grad: ["#8C6C2C", "#3D4E30"] },
+  { partner: "Baobab Body Co.", name: "Baobab Body Oil", cat: "Skin", price: "R320", desc: "Cold-pressed baobab oil for dry, post-sun skin.", badge: "New", grad: ["#C9A24B", "#8C6C2C"] },
+  { partner: "Stillwater Botanicals", name: "Magnesium Soak", cat: "Recovery", price: "R210", desc: "Mineral bath soak for tired muscles after training.", badge: "", grad: ["#5B7247", "#17140F"] },
+  { partner: "Kraal Fitness Co.", name: "Resistance Band Set", cat: "Movement", price: "R380", desc: "Three-tier band set used in our studio's mobility classes.", badge: "", grad: ["#3D4E30", "#17140F"] },
+  { partner: "Amanzi Hydration", name: "Electrolyte Sachets (10)", cat: "Recovery", price: "R165", desc: "No added sugar, formulated with our sports therapists.", badge: "Bestseller", grad: ["#3D4E30", "#5B7247"] },
+  { partner: "Marula Skin Lab", name: "Marula Face Serum", cat: "Skin", price: "R410", desc: "Lightweight serum, cold-pressed marula base.", badge: "New", grad: ["#8C6C2C", "#C9A24B"] },
+  { partner: "Ember & Root", name: "Herbal Steam Blend", cat: "Recovery", price: "R190", desc: "Facial steam mix used in the lodge's herb room.", badge: "", grad: ["#17140F", "#3D4E30"] },
+  { partner: "Rooibos & Rest", name: "Sleep Mist", cat: "Sleep", price: "R175", desc: "Pillow mist with rooibos flower and chamomile.", badge: "", grad: ["#3D4E30", "#8C6C2C"] },
+  { partner: "Kraal Fitness Co.", name: "Foam Roller", cat: "Movement", price: "R295", desc: "Dense foam roller, the same one used in-studio.", badge: "", grad: ["#8C6C2C", "#3D4E30"] },
+];
+
+const CATS = ["All", "Sleep", "Recovery", "Skin", "Movement"];
+const PARTNERS = ["Rooibos & Rest", "Baobab Body Co.", "Stillwater Botanicals", "Kraal Fitness Co.", "Amanzi Hydration", "Marula Skin Lab", "Ember & Root"];
+
+export default function WellnessPage() {
+  const [view, setView] = useState<ViewName>("shop");
+  const [activeCat, setActiveCat] = useState("All");
+  const [regSuccess, setRegSuccess] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [addedId, setAddedId] = useState<string | null>(null);
+
+  // Sync view with URL hash, same behavior as original wlShowView/routeFromHash
+  useEffect(() => {
+    const routeFromHash = () => {
+      const hash = (window.location.hash || "#shop").replace("#", "");
+      const valid: ViewName[] = ["shop", "register", "login"];
+      setView(valid.includes(hash as ViewName) ? (hash as ViewName) : "shop");
+    };
+    routeFromHash();
+    window.addEventListener("hashchange", routeFromHash);
+    return () => window.removeEventListener("hashchange", routeFromHash);
+  }, []);
+
+  function showView(name: ViewName) {
+    setView(name);
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    history.replaceState(null, "", "#" + name);
+  }
+
+  function handleRegister(e: React.FormEvent) {
+    e.preventDefault();
+    setRegSuccess(true);
+    setTimeout(() => {
+      setRegSuccess(false);
+      showView("shop");
+    }, 900);
+  }
+
+  function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setLoginSuccess(true);
+    setTimeout(() => {
+      setLoginSuccess(false);
+      showView("shop");
+    }, 900);
+  }
+
+  function addToCart(id: string) {
+    setAddedId(id);
+    setTimeout(() => setAddedId((cur) => (cur === id ? null : cur)), 900);
+  }
+
+  const visibleProducts = PRODUCTS.filter((p) => activeCat === "All" || p.cat === activeCat);
+
+  return (
+    <>
+      <header className="site-header">
+        <div className="nav-row">
+          <Link href="/" className="brand-lockup">
+            <Image src="/assets/brand/samangile-logo-master.png" alt="Samangile Guest Lodge" width={40} height={40} />
+            <span className="word">Samangile</span>
+          </Link>
+          <nav className="nav-links">
+            <Link href="/#rooms">Rooms</Link>
+            <Link href="/#wellness">Wellness</Link>
+            <Link href="/#garden">Garden &amp; Dining</Link>
+            <Link href="/#gallery">Gallery</Link>
+            <a href="#shop" onClick={(e) => { e.preventDefault(); showView("shop"); }}>Shop</a>
+            <a href="#login" onClick={(e) => { e.preventDefault(); showView("login"); }}>Log In</a>
+            <Link href="/#contact" className="nav-cta">Book Now</Link>
+          </nav>
+          <button className="nav-toggle" aria-label="Menu">☰</button>
+        </div>
+      </header>
+
+      {/* ================= SHOP ================= */}
+      <section className={`wl-view${view === "shop" ? " active" : ""}`} id="view-shop">
+        <div className="container shop-hero">
+          <p className="eyebrow">Wellness Marketplace</p>
+          <h1>Shop the homestead</h1>
+          <p className="lede">
+            Every product below is made or practiced by one of the exclusive wellness partners at Samangile Guest
+            Lodge. Browse by what you&apos;re after, or{" "}
+            <a href="#register" onClick={(e) => { e.preventDefault(); showView("register"); }} style={{ textDecoration: "underline", color: "var(--gold-deep)" }}>
+              create an account
+            </a>{" "}
+            to save your cart.
+          </p>
+        </div>
+
+        <div className="container">
+          <div className="partner-row">
+            {PARTNERS.map((p) => (
+              <span key={p}>{p}</span>
+            ))}
+          </div>
+        </div>
+
+        <div className="container">
+          <div className="filter-row">
+            {CATS.map((c) => (
+              <button
+                key={c}
+                className={`filter-btn${c === activeCat ? " active" : ""}`}
+                onClick={() => setActiveCat(c)}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+
+          <div className="shop-grid">
+            {visibleProducts.map((p) => {
+              const id = `${p.partner}-${p.name}`;
+              return (
+                <div className="product-card" key={id}>
+                  <div
+                    className="product-media"
+                    style={{ background: `linear-gradient(135deg, ${p.grad[0]}, ${p.grad[1]})` }}
+                  >
+                    {p.badge && <span className="badge">{p.badge}</span>}
+                  </div>
+                  <div className="product-body">
+                    <div className="product-partner">{p.partner}</div>
+                    <div className="product-title">{p.name}</div>
+                    <div className="product-desc">{p.desc}</div>
+                    <div className="product-foot">
+                      <span className="product-price">{p.price}</span>
+                      <button className="add-btn" onClick={() => addToCart(id)}>
+                        {addedId === id ? "Added ✓" : "Add"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= REGISTER ================= */}
+      <section className={`wl-view${view === "register" ? " active" : ""}`} id="view-register">
+        <div className="auth-shell">
+          <div className="auth-side">
+            <div className="pattern"></div>
+            <div className="brand-mini">
+              <Image src="/assets/brand/samangile-logo-master.png" alt="Samangile" width={26} height={26} />
+              <span>Samangile</span>
+            </div>
+            <div>
+              <p className="quote">&quot;Samangile isn&apos;t a store front — it&apos;s the homestead&apos;s gate. Everyone who enters is expected.&quot;</p>
+              <p className="attrib">— lodge founding note</p>
+            </div>
+          </div>
+          <div className="auth-form-col">
+            <div className="auth-card">
+              <h2>Create your account</h2>
+              <p className="sub">Join the homestead — takes about a minute.</p>
+              <div className={`success-box${regSuccess ? " show" : ""}`}>Account created. Redirecting you to the shop…</div>
+              <form onSubmit={handleRegister}>
+                <div className="field">
+                  <label htmlFor="rName">Full name</label>
+                  <input id="rName" type="text" required placeholder="Thandiwe Nkosi" />
+                </div>
+                <div className="field">
+                  <label htmlFor="rEmail">Email</label>
+                  <input id="rEmail" type="email" required placeholder="you@email.com" />
+                </div>
+                <div className="field">
+                  <label htmlFor="rPass">Password</label>
+                  <input id="rPass" type="password" required minLength={8} placeholder="At least 8 characters" />
+                </div>
+                <div className="field">
+                  <label>What are you here for?</label>
+                  <div className="checks">
+                    <label className="chip"><input type="checkbox" defaultChecked />Sleep</label>
+                    <label className="chip"><input type="checkbox" />Recovery</label>
+                    <label className="chip"><input type="checkbox" />Skin</label>
+                    <label className="chip"><input type="checkbox" />Movement</label>
+                    <label className="chip"><input type="checkbox" />Nutrition</label>
+                  </div>
+                </div>
+                <button className="btn btn-primary" style={{ width: "100%" }} type="submit">Create account</button>
+              </form>
+              <div className="auth-foot">
+                Already have an account?{" "}
+                <button onClick={() => showView("login")}>Log in</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= LOGIN ================= */}
+      <section className={`wl-view${view === "login" ? " active" : ""}`} id="view-login">
+        <div className="auth-shell">
+          <div className="auth-side">
+            <div className="pattern"></div>
+            <div className="brand-mini">
+              <Image src="/assets/brand/samangile-logo-master.png" alt="Samangile" width={26} height={26} />
+              <span>Samangile</span>
+            </div>
+            <div>
+              <p className="quote">&quot;Twelve partners, one gate at Samangile. Sign in and pick up right where you left off.&quot;</p>
+              <p className="attrib">— lodge founding note</p>
+            </div>
+          </div>
+          <div className="auth-form-col">
+            <div className="auth-card">
+              <h2>Welcome back</h2>
+              <p className="sub">Log in to your Samangile account.</p>
+              <div className={`success-box${loginSuccess ? " show" : ""}`}>Signed in. Redirecting you to the shop…</div>
+              <form onSubmit={handleLogin}>
+                <div className="field">
+                  <label htmlFor="lEmail">Email</label>
+                  <input id="lEmail" type="email" required placeholder="you@email.com" />
+                </div>
+                <div className="field">
+                  <label htmlFor="lPass">Password</label>
+                  <input id="lPass" type="password" required placeholder="Your password" />
+                </div>
+                <button className="btn btn-primary" style={{ width: "100%" }} type="submit">Log in</button>
+              </form>
+              <div className="auth-foot">
+                New to Samangile?{" "}
+                <button onClick={() => showView("register")}>Create an account</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="site-footer">
+        <div className="container">
+          <div className="footer-grid">
+            <div>
+              <Image src="/assets/brand/samangile-logo-master.png" alt="Samangile Guest Lodge" width={44} height={44} style={{ marginBottom: 14 }} />
+              <p style={{ color: "var(--stone)", fontSize: "0.9rem" }}>
+                A guest lodge and wellness retreat set on open bushveld grassland — and the online marketplace for the partners who practice here.
+              </p>
+            </div>
+            <div>
+              <h4>Explore</h4>
+              <Link href="/#rooms">Rooms</Link>
+              <Link href="/#wellness">Wellness</Link>
+              <Link href="/#garden">Garden &amp; Dining</Link>
+              <Link href="/#gallery">Gallery</Link>
+              <a href="#shop" onClick={(e) => { e.preventDefault(); showView("shop"); }}>Shop</a>
+            </div>
+            <div>
+              <h4>Lodge</h4>
+              <Link href="/#contact">Book Now</Link>
+              <Link href="/#corporate">Corporate &amp; Conference</Link>
+              <a href="#">FAQ</a>
+            </div>
+            <div>
+              <h4>Contact</h4>
+              <a href="#">reservations@samangile.co.za</a>
+              <a href="#">+27 00 000 0000</a>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <span>© 2026 Samangile Investments and Projects</span>
+            <span>Demo build — placeholder contact details</span>
+          </div>
+          <p className="footer-legal-note">
+            Samangile® is a registered trademark of Samangile Energy Solutions, used under licence. The Samangile
+            Guest Lodge property is owned and held by Samangile Investments and Projects, the legal property-owning
+            entity. This is a demo build assembled for layout and design review — copy, pricing and contact details
+            are placeholders pending sign-off.
+          </p>
+        </div>
+      </footer>
+
+      <div className="sticky-cta">
+        <a href="#shop" onClick={(e) => { e.preventDefault(); showView("shop"); }} className="btn btn-primary">Shop Now</a>
+        <Link href="/#contact" className="btn btn-whatsapp">Book a Stay</Link>
+      </div>
+    </>
+  );
+}
