@@ -18,7 +18,7 @@ on:
 
 jobs:
   build:
-    if: false # Workflow is disabled - requires manual trigger and Datadog API keys to be configured
+    if: ${{ secrets.DD_API_KEY != '' && secrets.DD_APP_KEY != '' }} # skip job when Datadog keys are not configured
     runs-on: ubuntu-latest
 
     steps:
@@ -32,4 +32,3 @@ jobs:
         api_key: ${{secrets.DD_API_KEY}}
         app_key: ${{secrets.DD_APP_KEY}}
         test_search_query: 'tag:e2e-tests' #Modify this tag to suit your tagging strategy
-
