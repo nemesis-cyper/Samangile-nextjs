@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const LINKS = [
@@ -21,7 +22,7 @@ export default function Header() {
     <header className="site-header">
       <div className="nav-row">
         <Link href="/" className="brand-lockup" aria-label="Samangile Guest Lodge — Home">
-          <img src="/assets/brand/samangile-logo-master.png" alt="Samangile Guest Lodge logo" />
+          <Image src="/assets/brand/samangile-logo-master.png" alt="Samangile Guest Lodge logo" width={40} height={40} />
         </Link>
         <nav className={`nav-links${open ? " open" : ""}`} id="navLinks">
           {LINKS.map(([href, label]) => (
