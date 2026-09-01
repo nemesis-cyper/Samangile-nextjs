@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { SITE_SETTINGS } from "@/lib/data";
 
 export default function Footer() {
@@ -7,10 +8,12 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div>
-            <img
+            <Image
               src="/assets/brand/samangile-logo-master.png"
               alt="Samangile Guest Lodge logo"
-              style={{ height: 48, marginBottom: 14 }}
+              width={48}
+              height={48}
+              style={{ marginBottom: 14 }}
             />
             <p style={{ maxWidth: 320, fontSize: "0.9rem" }}>
               Samangile Guest Lodge &amp; Umuzi Wellness House — a refined guest lodge and wellness house
