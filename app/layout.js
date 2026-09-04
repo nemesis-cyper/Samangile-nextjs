@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StickyCta from "@/components/StickyCta";
 import TrackEvents from "@/components/TrackEvents";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -62,6 +63,7 @@ export default function RootLayout({ children }) {
         <Footer />
         <StickyCta />
         <TrackEvents />
+        <SpeedInsights />
       </body>
     </html>
   );
